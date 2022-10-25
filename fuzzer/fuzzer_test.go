@@ -35,7 +35,7 @@ func TestMinimizeProgram(t *testing.T) {
 	// Only local test, should not be run in test pipeline
 	data := "asdfadfasdfasdfasdfasdfasdfadsfldlafdsgoinsfandofaijdsf"
 	f := filler.NewFiller([]byte(data))
-	testMaker, _ := generator.GenerateProgram(f)
+	testMaker, _, _ := generator.GenerateProgram(f)
 	name := randTestName([]byte(data))
 	if err := testMaker.Fill(nil); err != nil {
 		panic(err)

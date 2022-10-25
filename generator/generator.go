@@ -38,7 +38,7 @@ var (
 
 // GenerateProgram creates a new evm program and returns
 // a gstMaker based on it as well as its program code.
-func GenerateProgram(f *filler.Filler) (*fuzzing.GstMaker, []byte) {
+func GenerateProgram(f *filler.Filler) (*fuzzing.GstMaker, []byte, []byte) {
 	var (
 		env = Environment{
 			p:         program.NewProgram(),
@@ -58,7 +58,8 @@ func GenerateProgram(f *filler.Filler) (*fuzzing.GstMaker, []byte) {
 		strategy.Execute(env)
 	}
 	code := env.jumptable.InsertJumps(env.p.Bytecode())
-	return createGstMaker(f, code), code
+	blob := createBlob(env)
+	return createGstMaker(f, code), code, blob
 }
 
 func createGstMaker(fill *filler.Filler, code []byte) *fuzzing.GstMaker {

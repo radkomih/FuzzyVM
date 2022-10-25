@@ -58,12 +58,12 @@ func (*createCallGenerator) Execute(env Environment) {
 	recursionLevel++
 	// Create and call a meaningful program
 	var (
-		seedLen   = env.f.Uint16()
-		seed      = env.f.ByteSlice(int(seedLen))
-		newFiller = filler.NewFiller(seed)
-		_, code   = GenerateProgram(newFiller)
-		isCreate2 = env.f.Bool()
-		callOp    = ops.OpCode(env.f.Byte())
+		seedLen    = env.f.Uint16()
+		seed       = env.f.ByteSlice(int(seedLen))
+		newFiller  = filler.NewFiller(seed)
+		_, code, _ = GenerateProgram(newFiller)
+		isCreate2  = env.f.Bool()
+		callOp     = ops.OpCode(env.f.Byte())
 	)
 	env.p.CreateAndCall(code, isCreate2, callOp)
 	// Decreasing recursion level generates to heavy test cases,

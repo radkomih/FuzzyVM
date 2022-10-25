@@ -50,7 +50,7 @@ func Fuzz(data []byte) int {
 		return -1
 	}
 	f := filler.NewFiller(data)
-	testMaker, _ := generator.GenerateProgram(f)
+	testMaker, _, _ := generator.GenerateProgram(f)
 	name := randTestName(data)
 	// minimize test
 	minimized, err := minimizeProgram(testMaker, name)

@@ -44,7 +44,7 @@ func TestGenerator(t *testing.T) {
 
 	input := []byte(inputEscaped)
 	filler := filler.NewFiller(input)
-	_, p := GenerateProgram(filler)
+	_, p, _ := GenerateProgram(filler)
 	if len(p) == 0 {
 		panic("Should generate a program")
 	}

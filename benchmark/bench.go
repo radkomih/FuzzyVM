@@ -45,7 +45,7 @@ func generateTest(name, outputDir string) error {
 		return err
 	}
 	// Generate a test
-	prog, _ := generator.GenerateProgram(f)
+	prog, _, _ := generator.GenerateProgram(f)
 	if err := prog.Fill(nil); err != nil {
 		return err
 	}
