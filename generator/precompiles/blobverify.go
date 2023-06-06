@@ -50,6 +50,34 @@ func (*blobverifyCaller) call(p *program.Program, f *filler.Filler) error {
 	return nil
 }
 
+/*
+	Precompile:
+		[32]byte: VersionedHash
+		[32]byte: EvaluationPoint (LE)
+		[32]byte: ExpectedOutput (LE)
+		[48]byte: DataKZG
+		[48]byte: QuotientKZG
+
+		Assertions:
+		EP < BLS_MODULUS
+		EO < BLS_MODULUS
+		KZGToVersionedHash(DataKZG) == VersionedHash
+		VerifyKZG(DataKZG, EP, EO, QuotientKZG)
+*/
+
+// VersionedHash = kzg.KZGToVersionedHash(DataKZG)
+// BLS_MODULUS = gokzg4844.BlsModulus[:]
+
+/*
+blob := GetRandBlob(123)
+	commitment, err := ctx.BlobToKZGCommitment(blob, NumGoRoutines)
+	require.NoError(t, err)
+	proof, err := ctx.ComputeBlobKZGProof(blob, commitment, NumGoRoutines)
+	require.NoError(t, err)
+	err = ctx.VerifyBlobKZGProof(blob, commitment, proof)
+	require.NoError(t, err)
+*/
+
 func randomBlob(f *filler.Filler) []byte {
 	version := f.ByteSlice256()
 	evaluationPoint := f.ByteSlice256()
@@ -76,4 +104,22 @@ func correctBlob() []byte {
 	input = append(input, dataKZG.Bytes()...)
 	input = append(input, quotientKZG.Bytes()...)
 	return input
+}
+
+func point(f *filler.Filler) []byte {
+	g1 := bls12381.NewG1()
+	switch f.Byte() % 3 {
+	case 0:
+		return g1.Q().Bytes()
+	case 1:
+		return g1.ToBytes(g1.Zero())
+	case 2:
+		return g1.ToBytes(g1.One())
+	case 3:
+		rnd := f.BigInt32()
+		res := g1.One()
+		g1.MulScalar(res, res, rnd)
+		return g1.ToBytes(res)
+	}
+	return nil
 }
